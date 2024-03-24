@@ -4,7 +4,9 @@ from leerYPresentarInformacion import insercionUsuario
 funciones = {
    "insertar_elemento": insercionUsuario.insertar_elementos,
    "salir":insercionUsuario.salir,
-   "mostrar_matriz":utilidades.mostrar_matriz_ascii
+   "mostrar_matriz":utilidades.mostrar_matriz_ascii,
+   "reiniciar":insercionUsuario.reiniciar,
+   "jugador_automatico":insercionUsuario.reiniciar
 }
 
 if __name__ == "__main__":
