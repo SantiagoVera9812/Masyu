@@ -28,6 +28,6 @@ def salir(ejecutar_bucle):
 def reiniciar(matriz):
     for i in range(len(matriz)):
         for j in range(len(matriz[0])):
-            if matriz[i][j] != 1 or matriz[i][j] != 2:
+            if matriz[i][j] not in [0, 1, 2]:
                 matriz[i][j] = 0
     utilidades.mostrar_matriz_ascii(matriz)
