@@ -1,3 +1,5 @@
+from logicaMasyu import constantes
+
 def matriz_a_lista_de_adyacencia(matriz):
     lista_adyacencia = {}
     filas = len(matriz)
@@ -62,13 +64,23 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia):
     
     # Asignar el valor correspondiente basado en los vecinos
     if tiene_vecino_horizontal and tiene_vecino_vertical:
-        matriz[fila][columna] = 4  # Vecino vertical y horizontal
+        matriz[fila][columna] = constantes.Constantes.ESQUINA  # Vecino vertical y horizontal
     elif tiene_vecino_horizontal:
-        matriz[fila][columna] = 5  # Vecino horizontal
+        matriz[fila][columna] = constantes.Constantes.AL_LADO  # Vecino horizontal
     elif tiene_vecino_vertical:
-        matriz[fila][columna] = 6  # Vecino vertical
+        matriz[fila][columna] = constantes.Constantes.VERTICAL  # Vecino vertical
     else:
-        matriz[fila][columna] = 3  # No tiene vecinos
+        matriz[fila][columna] = constantes.Constantes.NO_VECINOS  # No tiene vecinos
 
+def procesar_matriz(matriz):
+    # Recorre cada fila y columna de la matriz
+
+    lista_adyacencia = matriz_a_lista_de_adyacencia(matriz)
+    for fila in range(len(matriz)):
+        for columna in range(len(matriz[0])):
+            if matriz[fila][columna] not in [0, 1, 2]:
+            # Convierte la matriz en lista de adyacencia
+             asignar_valor_nodo(matriz, fila, columna, lista_adyacencia)
+            
     
     

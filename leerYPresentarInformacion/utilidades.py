@@ -1,5 +1,6 @@
 import sys
 import matplotlib.pyplot as plt
+from logicaMasyu import constantes
 
 def leer_archivo(input_file):
     try:
@@ -25,7 +26,7 @@ def leer_archivo(input_file):
 def mostrar_matriz_ascii(matriz):
     # Funciones lambda para definir la representación entendida por la linea de comando y el usuario de cada elemento
     #Un punto representara un lugar en donde el jugador no ha puesto nada, un 0 representara las blancas, y un negro representara las negras
-    get_ascii = lambda x: ' . ' if x == 0 else (' O ' if x == 1 else (' X ' if x == 2 else (' - ' if x == 3 else (' / ' if x == 4 else ('---' if x == 5 else ' | ')))))
+    get_ascii = lambda x: ' . ' if x == constantes.Constantes.NADA else (' O ' if x == constantes.Constantes.BLANCO else (' X ' if x == constantes.Constantes.NEGRO else (' - ' if x == constantes.Constantes.NO_VECINOS else (' / ' if x == constantes.Constantes.ESQUINA else ('---' if x == constantes.Constantes.AL_LADO else ' | ')))))
 
 
     for fila in matriz:

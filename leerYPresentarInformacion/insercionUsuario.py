@@ -13,6 +13,8 @@ def insertar_elementos(fila, columna, matriz):
             print(lista_adyacencia)
             listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia)
             utilidades.mostrar_matriz_ascii(matriz)
+            listaAdyecencia.procesar_matriz(matriz)
+            utilidades.mostrar_matriz_ascii(matriz)
             
     else:
         print("Argumentos numéricos no válidos")
