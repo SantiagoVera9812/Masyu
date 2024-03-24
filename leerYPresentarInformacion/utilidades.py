@@ -25,7 +25,7 @@ def leer_archivo(input_file):
 def mostrar_matriz_ascii(matriz):
     # Funciones lambda para definir la representación entendida por la linea de comando y el usuario de cada elemento
     #Un punto representara un lugar en donde el jugador no ha puesto nada, un 0 representara las blancas, y un negro representara las negras
-    get_ascii = lambda x: ' . ' if x == 0 else (' 0 ' if x == 1 else ' X ')
+    get_ascii = lambda x: ' . ' if x == 0 else (' 0 ' if x == 1 else (' X ' if x == 2 else (' - ' if x == 3 else ' | ')))
 
     for fila in matriz:
         # Mapea cada elemento de la fila a su representación usando la función lambda
