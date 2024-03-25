@@ -92,10 +92,10 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia):
 
 # Ajustar si el nodo debe ser AL_LADO o VERTICAL
     if si_esquina:
-     if not con_vertical and con_horizontal:
-        matriz[fila][columna] = constantes.Constantes.VERTICAL
-     if not con_horizontal and not con_vertical:
+     if not con_vertical:
         matriz[fila][columna] = constantes.Constantes.AL_LADO
+     if not con_horizontal:
+        matriz[fila][columna] = constantes.Constantes.VERTICAL
 
     es_esquina(matriz,fila,columna,lista_adyacencia)
 
