@@ -79,12 +79,12 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia):
 # Asignar el valor correspondiente basado en los vecinos
     if tiene_vecino_horizontal and tiene_vecino_vertical and contador_horizontal <= 1 and contador_vertical <= 1:
      matriz[fila][columna] = constantes.Constantes.ESQUINA  # Vecino vertical y horizontal
-    elif tiene_vecino_horizontal and contador_horizontal >= 1:
+    elif tiene_vecino_horizontal and contador_horizontal >= 2:
      if not si_esquina:
         matriz[fila][columna] = constantes.Constantes.AL_LADO  # Vecino horizontal
      else:
         con_horizontal = False
-    elif tiene_vecino_vertical and contador_vertical >= 1:
+    elif tiene_vecino_vertical and contador_vertical >= 2:
      if not si_esquina:
         matriz[fila][columna] = constantes.Constantes.VERTICAL  # Vecino vertical
      else:
@@ -92,13 +92,10 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia):
 
 # Ajustar si el nodo debe ser AL_LADO o VERTICAL
     if si_esquina:
-     if not con_vertical:
-        matriz[fila][columna] = constantes.Constantes.AL_LADO
-    if not con_horizontal:
+     if not con_vertical and con_horizontal:
         matriz[fila][columna] = constantes.Constantes.VERTICAL
-
-
-
+     if not con_horizontal and not con_vertical:
+        matriz[fila][columna] = constantes.Constantes.AL_LADO
 
 def procesar_matriz(matriz):
     # Recorre cada fila y columna de la matriz
