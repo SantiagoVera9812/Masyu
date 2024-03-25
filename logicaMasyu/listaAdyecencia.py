@@ -46,6 +46,10 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia):
     tiene_vecino_vertical = False
     tiene_vecino_horizontal = False
 
+    # Contadores para revisar si hay mas de un vecino horizontales o verticales
+    contador_horizontal = 0
+    contador_vertical = 0
+
     # Verificar si el nodo tiene vecinos
     if (fila, columna) in lista_adyacencia:
         vecinos = lista_adyacencia[(fila, columna)]
@@ -55,22 +59,46 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia):
         for vecino, _ in vecinos:
             if vecino[0] == fila:  # Vecino en la misma fila, es horizontal
                 tiene_vecino_horizontal = True
+                contador_horizontal += 1
             if vecino[1] == columna:  # Vecino en la misma columna, es vertical
                 tiene_vecino_vertical = True
+                contador_vertical += 1
     
     # Imprimir los valores de los índices para depuración
     print("Fila:", fila)
     print("Columna:", columna)
-    
-    # Asignar el valor correspondiente basado en los vecinos
+
+    si_esquina = False
+    con_vertical = True
+    con_horizontal = True
+
+# Verificar si el nodo es una esquina
     if tiene_vecino_horizontal and tiene_vecino_vertical:
-        matriz[fila][columna] = constantes.Constantes.ESQUINA  # Vecino vertical y horizontal
-    elif tiene_vecino_horizontal:
+     si_esquina = True
+
+# Asignar el valor correspondiente basado en los vecinos
+    if tiene_vecino_horizontal and tiene_vecino_vertical and contador_horizontal <= 1 and contador_vertical <= 1:
+     matriz[fila][columna] = constantes.Constantes.ESQUINA  # Vecino vertical y horizontal
+    elif tiene_vecino_horizontal and contador_horizontal >= 1:
+     if not si_esquina:
         matriz[fila][columna] = constantes.Constantes.AL_LADO  # Vecino horizontal
-    elif tiene_vecino_vertical:
+     else:
+        con_horizontal = False
+    elif tiene_vecino_vertical and contador_vertical >= 1:
+     if not si_esquina:
         matriz[fila][columna] = constantes.Constantes.VERTICAL  # Vecino vertical
-    else:
-        matriz[fila][columna] = constantes.Constantes.NO_VECINOS  # No tiene vecinos
+     else:
+        con_vertical = False
+
+# Ajustar si el nodo debe ser AL_LADO o VERTICAL
+    if si_esquina:
+     if not con_vertical:
+        matriz[fila][columna] = constantes.Constantes.AL_LADO
+    if not con_horizontal:
+        matriz[fila][columna] = constantes.Constantes.VERTICAL
+
+
+
 
 def procesar_matriz(matriz):
     # Recorre cada fila y columna de la matriz
