@@ -15,6 +15,8 @@ def insertar_elementos(fila, columna, matriz):
             utilidades.mostrar_matriz_ascii(matriz)
             listaAdyecencia.procesar_matriz(matriz)
             utilidades.mostrar_matriz_ascii(matriz)
+            lista_adyacencia = utilidades.eliminar_nodo_y_vecinos(fila+1,columna+1,matriz)
+            
             
     else:
         print("Argumentos numéricos no válidos")

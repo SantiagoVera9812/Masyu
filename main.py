@@ -10,7 +10,8 @@ funciones = {
    "jugador_automatico":insercionUsuario.reiniciar,
    "mostrar_matriz_numerica":utilidades.mostrar_matriz,
    "editar_elemento":insercionUsuario.editar_elemento,
-   "obtener_primera_ficha": utilidades.obtener_primera_ficha
+   "obtener_primera_ficha": utilidades.obtener_primera_ficha,
+   "eliminar_nodo":utilidades.eliminar_nodo_y_vecinos
 }
 
 if __name__ == "__main__":
