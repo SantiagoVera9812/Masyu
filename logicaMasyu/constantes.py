@@ -7,3 +7,8 @@ class Constantes:
     AL_LADO = 5
     VERTICAL = 6
 
+class Direcciones:
+    DERECHA = 'd'
+    IZQUIERDA = 'a'
+    ARRIBA = 'w'
+    ABAJO = 's'

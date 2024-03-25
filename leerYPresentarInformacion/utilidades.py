@@ -1,7 +1,7 @@
 import sys
 import matplotlib.pyplot as plt
 from logicaMasyu import constantes
-
+from logicaMasyu import listaAdyecencia
 def leer_archivo(input_file):
     try:
         with open(input_file, 'r') as f:
@@ -39,3 +39,19 @@ def mostrar_matriz(matriz):
         print(fila)
 
     
+def obtener_primera_ficha(matriz):
+    lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
+    for nodo, vecinos in lista_adyacencia.items():
+        for vecino, peso in vecinos:
+            if peso in [1, 2]:
+                print(nodo)
+                print(peso)
+                return nodo, peso
+        else:
+            continue
+    # Si no se encontró ningún nodo con peso 1 o 2, devolver el primer nodo con su peso
+    primer_nodo = list(lista_adyacencia.keys())[0]
+    peso_primer_nodo = lista_adyacencia[primer_nodo][0][1]
+    print("No se encontró ningún nodo con peso 1 o 2. Devolviendo el primer nodo:", primer_nodo, "con peso:", peso_primer_nodo)
+    return primer_nodo, peso_primer_nodo
+         

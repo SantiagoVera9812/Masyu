@@ -1,3 +1,16 @@
+from logicaMasyu.constantes import Constantes
+from logicaMasyu.constantes import Direcciones
+
+NO_VECINOS = Constantes.NO_VECINOS #3
+ESQUINA = Constantes.ESQUINA  #4
+AL_LADO = Constantes.AL_LADO #5
+VERTICAL = Constantes.VERTICAL #6
+
+ARRIBA = Direcciones.ARRIBA
+ABAJO = Direcciones.ABAJO
+IZQUIERDA = Direcciones.IZQUIERDA
+DERECHA = Direcciones.DERECHA
+
 def verificar_vecinos_uno(matriz, fila, columna, lista_adyacencia):
     # Obtener el tamaño de la matriz
     num_filas = len(matriz)
@@ -45,4 +58,16 @@ def verificar_vecinos_dos(matriz, fila, columna, lista_adyacencia):
 
     # El nodo es una esquina si hay un vecino horizontal y un vecino vertical en el rango correcto
     return contador_horizontal >= 1 and contador_vertical >= 1
-       
+
+def obtener_nueva_direccion(peso, direccion_actual):
+    return {
+        ESQUINA: {
+            DERECHA: ARRIBA,
+            ABAJO: IZQUIERDA,
+            IZQUIERDA: ABAJO,
+            ARRIBA: DERECHA
+        },
+        AL_LADO: {DERECHA: DERECHA, IZQUIERDA: IZQUIERDA}.get(direccion_actual, DERECHA),
+        VERTICAL: {ARRIBA: ARRIBA, ABAJO: ABAJO}.get(direccion_actual, ARRIBA)
+    }.get(peso, direccion_actual)
+

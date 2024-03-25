@@ -1,6 +1,7 @@
 import sys
 from leerYPresentarInformacion import utilidades
 from leerYPresentarInformacion import insercionUsuario
+
 funciones = {
    "insertar_elemento": insercionUsuario.insertar_elementos,
    "salir":insercionUsuario.salir,
@@ -8,7 +9,8 @@ funciones = {
    "reiniciar":insercionUsuario.reiniciar,
    "jugador_automatico":insercionUsuario.reiniciar,
    "mostrar_matriz_numerica":utilidades.mostrar_matriz,
-   "editar_elemento":insercionUsuario.editar_elemento
+   "editar_elemento":insercionUsuario.editar_elemento,
+   "obtener_primera_ficha": utilidades.obtener_primera_ficha
 }
 
 if __name__ == "__main__":
