@@ -79,12 +79,12 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia):
 # Asignar el valor correspondiente basado en los vecinos
     if tiene_vecino_horizontal and tiene_vecino_vertical and contador_horizontal <= 1 and contador_vertical <= 1:
      matriz[fila][columna] = constantes.Constantes.ESQUINA  # Vecino vertical y horizontal
-    elif tiene_vecino_horizontal and contador_horizontal >= 2:
+    elif tiene_vecino_horizontal and contador_horizontal >= 1:
      if not si_esquina:
         matriz[fila][columna] = constantes.Constantes.AL_LADO  # Vecino horizontal
      else:
         con_horizontal = False
-    elif tiene_vecino_vertical and contador_vertical >= 2:
+    elif tiene_vecino_vertical and contador_vertical >= 1:
      if not si_esquina:
         matriz[fila][columna] = constantes.Constantes.VERTICAL  # Vecino vertical
      else:
@@ -96,6 +96,35 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia):
         matriz[fila][columna] = constantes.Constantes.VERTICAL
      if not con_horizontal and not con_vertical:
         matriz[fila][columna] = constantes.Constantes.AL_LADO
+
+    es_esquina(matriz,fila,columna,lista_adyacencia)
+
+def es_esquina(matriz, fila, columna, lista_adyacencia):
+    # Obtener el tamaño de la matriz
+    num_filas = len(matriz)
+    num_columnas = len(matriz[0])
+
+    # Contadores para los vecinos en el rango correcto
+    contador_horizontal = 0
+    contador_vertical = 0
+
+    # Verificar si el nodo actual está en el rango correcto
+    if matriz[fila][columna] in [3, 4, 5, 6]:
+        # Verificar los vecinos en el rango correcto
+        if (fila - 1, columna) in lista_adyacencia and matriz[fila - 1][columna] in [3, 4, 5, 6]:
+            contador_vertical += 1
+        if (fila + 1, columna) in lista_adyacencia and matriz[fila + 1][columna] in [3, 4, 5, 6]:
+            contador_vertical += 1
+        if (fila, columna - 1) in lista_adyacencia and matriz[fila][columna - 1] in [3, 4, 5, 6]:
+            contador_horizontal += 1
+        if (fila, columna + 1) in lista_adyacencia and matriz[fila][columna + 1] in [3, 4, 5, 6]:
+            contador_horizontal += 1
+
+    # El nodo es una esquina si hay un vecino horizontal y un vecino vertical en el rango correcto
+    if(contador_horizontal >= 1 and contador_vertical >= 1):
+       matriz[fila][columna] = constantes.Constantes.ESQUINA
+
+
 
 def procesar_matriz(matriz):
     # Recorre cada fila y columna de la matriz

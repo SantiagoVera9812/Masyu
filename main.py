@@ -7,7 +7,8 @@ funciones = {
    "mostrar_matriz":utilidades.mostrar_matriz_ascii,
    "reiniciar":insercionUsuario.reiniciar,
    "jugador_automatico":insercionUsuario.reiniciar,
-   "mostrar_matriz_numerica":utilidades.mostrar_matriz
+   "mostrar_matriz_numerica":utilidades.mostrar_matriz,
+   "editar_elemento":insercionUsuario.editar_elemento
 }
 
 if __name__ == "__main__":
