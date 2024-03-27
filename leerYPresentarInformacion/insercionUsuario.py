@@ -1,13 +1,14 @@
 from leerYPresentarInformacion import utilidades
 from logicaMasyu import listaAdyecencia
 from logicaMasyu.constantes import Constantes
-def insertar_elementos(fila, columna, matriz):
+def insertar_elementos(fila, columna, matriz, lista_adyacencia):
     fila = int(fila) - 1  # Convertir fila a entero
     columna = int(columna) - 1
     if 0 <= fila < len(matriz) and 0 <= columna < len(matriz):
         if matriz[fila][columna] != 0:
             print("Ya se encuentra un elemento en esa posición")
         else:
+            '''
             matriz[fila][columna] = 7
             lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
             print(lista_adyacencia)
@@ -16,8 +17,12 @@ def insertar_elementos(fila, columna, matriz):
             listaAdyecencia.procesar_matriz(matriz)
             utilidades.mostrar_matriz_ascii(matriz)
             lista_adyacencia = utilidades.eliminar_nodo_y_vecinos(fila+1,columna+1,matriz)
-            
-            
+            '''
+            matriz[fila][columna] = 7
+            lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
+            listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia)
+            listaAdyecencia.procesar_matriz(matriz)
+            utilidades.mostrar_matriz_ascii(matriz)
     else:
         print("Argumentos numéricos no válidos")
 

@@ -39,7 +39,7 @@ def mostrar_matriz(matriz):
         print(fila)
 
     
-def obtener_primera_ficha(matriz):
+def obtener_primera_ficha(matriz, lista_adyacencia):
     lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
     for nodo, vecinos in lista_adyacencia.items():
         for vecino, peso in vecinos:
@@ -55,12 +55,34 @@ def obtener_primera_ficha(matriz):
     print("No se encontró ningún nodo con peso 1 o 2. Devolviendo el primer nodo:", primer_nodo, "con peso:", peso_primer_nodo)
     return primer_nodo, peso_primer_nodo
 
-def eliminar_nodo_y_vecinos(fila, columna, matriz):
+def eliminar_nodo_y_vecinos(fila, columna, lista_adyacencia):
     fila = int(fila) - 1  # Convertir fila a entero
     columna = int(columna) - 1
     lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
 
     
+    nodo = (fila, columna)
+
+    # Eliminar el nodo de la lista de adyacencia
+    if nodo in lista_adyacencia:
+        print("Nodo en la lista de adyacencia")
+        eliminar_nodo_y_vecinos_matriz(fila,columna,matriz)
+        del lista_adyacencia[nodo]
+    else:
+        print("Nodo no encontrado:", nodo)
+        return  # Salir de la función si el nodo no se encuentra
+    
+    # Eliminar el nodo de la lista de vecinos de otros nodos
+    for vecinos in lista_adyacencia.values():
+        vecinos[:] = [vecino for vecino in vecinos if vecino[0] != nodo]
+
+    return lista_adyacencia
+
+def eliminar_nodo_y_vecinos_matriz(fila, columna, matriz, lista_adyacencia):
+    fila = int(fila) - 1  # Convertir fila a entero
+    columna = int(columna) - 1
+    lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
+
     nodo = (fila, columna)
 
     # Eliminar el nodo de la lista de adyacencia
@@ -75,7 +97,11 @@ def eliminar_nodo_y_vecinos(fila, columna, matriz):
     for vecinos in lista_adyacencia.values():
         vecinos[:] = [vecino for vecino in vecinos if vecino[0] != nodo]
 
+    # Eliminar el valor correspondiente en la matriz
+    matriz[fila][columna] = 0
+
     return lista_adyacencia
+
 
 
 
