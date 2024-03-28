@@ -19,7 +19,8 @@ def insertar_elementos(fila, columna, matriz, lista_adyacencia):
             lista_adyacencia = utilidades.eliminar_nodo_y_vecinos(fila+1,columna+1,matriz)
             '''
             matriz[fila][columna] = 7
-            lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
+            
+            
             listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia)
             listaAdyecencia.procesar_matriz(matriz)
             utilidades.mostrar_matriz_ascii(matriz)

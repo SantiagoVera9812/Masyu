@@ -13,7 +13,7 @@ funciones = {
    "editar_elemento":insercionUsuario.editar_elemento,
    "obtener_primera_ficha": utilidades.obtener_primera_ficha,
    "eliminar_nodo":utilidades.eliminar_nodo_y_vecinos_matriz,
-   "ignorar_nodo":utilidades.eliminar_nodo_y_vecinos
+   "ignorar_nodo":utilidades.agregar_a_nodos_por_ignorar
 }
 
 if __name__ == "__main__":
@@ -27,6 +27,12 @@ if __name__ == "__main__":
     lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
     utilidades.mostrar_matriz_ascii(matriz)
     ejecutar_bucle = True
+    lista_nodos = []
+
+    print("Nodos creados con éxito:")
+    for nodo in lista_nodos:
+        print(nodo)
+
 
     while ejecutar_bucle:
      comando = input("$")
@@ -37,8 +43,18 @@ if __name__ == "__main__":
      try:
       if nombre_del_comando in funciones:
             funcion = funciones[nombre_del_comando]
-            # If the command requires arguments
-            if len(argumentos) > 0:
+            if nombre_del_comando == "ignorar_nodo":  # Verificar si es la función específica
+             print("se encuentra ignorar nodo")
+             if len(argumentos) != 2:  # Se esperan exactamente 2 argumentos: filas y columnas
+                print("Se esperan exactamente 2 argumentos: filas y columnas")
+                continue
+                
+             filas, columnas = map(int, argumentos)  # Convertir los argumentos a enteros
+
+            # Llamar a la función con los argumentos proporcionados
+             utilidades.agregar_a_nodos_por_ignorar(filas=filas, columnas=columnas, matriz=matriz, lista_nodos=lista_nodos)
+            else:
+             if len(argumentos) > 0:
                 # Check if the number of arguments matches the function's expected number
                 if abs(len(argumentos) - funcion.__code__.co_argcount) not in (1, 2):
                     print("Argumentos incorrectos para el comando", nombre_del_comando)
@@ -50,7 +66,7 @@ if __name__ == "__main__":
                    funcion(*argumentos,lista_adyacencia)
                 finally:
                    funcion(*argumentos,matriz,lista_adyacencia)
-            else:
+             else:
                 # Call the function without arguments
                 try:
                  funcion()

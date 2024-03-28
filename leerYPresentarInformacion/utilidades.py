@@ -104,6 +104,24 @@ def eliminar_nodo_y_vecinos_matriz(fila, columna, matriz, lista_adyacencia):
 
 
 
+def agregar_a_nodos_por_ignorar(filas, columnas, matriz, lista_nodos):
+    fila = int(filas) - 1  # Convertir fila a entero
+    columna = int(columnas) - 1
 
+    # Verificar si las dimensiones son válidas
+
+    # Crear nodos con pesos
+    for i in range(len(matriz)):
+        for j in range(len(matriz[0])):
+            if fila == i and columna == j:
+                print("Se encontro el nodo")
+                peso = matriz[i][j] if i < len(matriz) and j < len(matriz[0]) else None
+                nodo = (i, j, peso)
+                lista_nodos.append(nodo)
+
+    # Imprimir los nodos creados
+    print("Nodos creados con éxito:")
+    for nodo in lista_nodos:
+        print(nodo)
 
 
