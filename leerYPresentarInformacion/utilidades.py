@@ -2,6 +2,7 @@ import sys
 import matplotlib.pyplot as plt
 from logicaMasyu import constantes
 from logicaMasyu import listaAdyecencia
+
 def leer_archivo(input_file):
     try:
         with open(input_file, 'r') as f:
@@ -124,4 +125,8 @@ def agregar_a_nodos_por_ignorar(filas, columnas, matriz, lista_nodos):
     for nodo in lista_nodos:
         print(nodo)
 
+def imprimir_lista_nodos(lista_nodo):
+    print("Lista de nodos:")
+    for nodo in lista_nodo:
+        print("Fila:", nodo[0] + 1, "Columna:", nodo[1] + 1)
 

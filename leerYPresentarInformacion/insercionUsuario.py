@@ -1,33 +1,31 @@
 from leerYPresentarInformacion import utilidades
 from logicaMasyu import listaAdyecencia
 from logicaMasyu.constantes import Constantes
-def insertar_elementos(fila, columna, matriz, lista_adyacencia):
+
+def insertar_elementos(fila, columna, matriz, lista_nodo):
     fila = int(fila) - 1  # Convertir fila a entero
     columna = int(columna) - 1
     if 0 <= fila < len(matriz) and 0 <= columna < len(matriz):
         if matriz[fila][columna] != 0:
             print("Ya se encuentra un elemento en esa posición")
         else:
-            '''
+            
             matriz[fila][columna] = 7
+            
             lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
-            print(lista_adyacencia)
-            listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia)
-            utilidades.mostrar_matriz_ascii(matriz)
-            listaAdyecencia.procesar_matriz(matriz)
-            utilidades.mostrar_matriz_ascii(matriz)
-            lista_adyacencia = utilidades.eliminar_nodo_y_vecinos(fila+1,columna+1,matriz)
-            '''
-            matriz[fila][columna] = 7
-            
-            
-            listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia)
-            listaAdyecencia.procesar_matriz(matriz)
+            print("asignando valores")
+            try:
+             listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia, lista_nodo)
+            except Exception as e:
+             print("Error:", e)
+            print("procesar matriz")
+            listaAdyecencia.procesar_matriz(matriz,lista_nodo)
+            print("mostrar matriz")
             utilidades.mostrar_matriz_ascii(matriz)
     else:
         print("Argumentos numéricos no válidos")
 
-def editar_elemento(fila,columna,nuevoValor,matriz):
+def editar_elemento(fila,columna,nuevoValor,matriz,lista_nodo):
     NO_VECINOS = Constantes.NO_VECINOS
     ESQUINA = Constantes.ESQUINA
     AL_LADO = Constantes.AL_LADO
@@ -45,6 +43,7 @@ def editar_elemento(fila,columna,nuevoValor,matriz):
                     print("Nuevo valor no valido")
                 else:
                     matriz[fila][columna] = nuevoValor
+                    lista_nodo.append((fila, columna)) 
                     utilidades.mostrar_matriz_ascii(matriz)
     else:
          print("Argumentos numéricos no válidos")

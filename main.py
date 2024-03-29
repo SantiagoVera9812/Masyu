@@ -13,7 +13,8 @@ funciones = {
    "editar_elemento":insercionUsuario.editar_elemento,
    "obtener_primera_ficha": utilidades.obtener_primera_ficha,
    "eliminar_nodo":utilidades.eliminar_nodo_y_vecinos_matriz,
-   "ignorar_nodo":utilidades.agregar_a_nodos_por_ignorar
+   "ignorar_nodo":utilidades.agregar_a_nodos_por_ignorar,
+   "imprimir_lista_nodos":utilidades.imprimir_lista_nodos
 }
 
 if __name__ == "__main__":
@@ -65,7 +66,7 @@ if __name__ == "__main__":
                 except:
                    funcion(*argumentos,lista_adyacencia)
                 finally:
-                   funcion(*argumentos,matriz,lista_adyacencia)
+                   funcion(*argumentos,matriz,lista_nodos)
              else:
                 # Call the function without arguments
                 try:
@@ -73,7 +74,10 @@ if __name__ == "__main__":
                 except:
                    #Una funcion que requiera la matriz
                    try:
-                    funcion(matriz)
+                    try:
+                     funcion(matriz)
+                    except:
+                       funcion(lista_nodos)
                    except:
                       print("llamado a la funcion ", nombre_del_comando)
                       funcion(matriz,lista_adyacencia)
