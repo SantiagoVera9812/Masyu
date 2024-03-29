@@ -8,7 +8,7 @@ class Constantes:
     VERTICAL = 6
 
 class Direcciones:
-    DERECHA = 'd'
-    IZQUIERDA = 'a'
-    ARRIBA = 'w'
-    ABAJO = 's'
+    DERECHA = 'derecha'
+    IZQUIERDA = 'izquierda'
+    ARRIBA = 'arriba'
+    ABAJO = 'abajo'

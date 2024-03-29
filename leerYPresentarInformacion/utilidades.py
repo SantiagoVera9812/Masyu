@@ -48,8 +48,6 @@ def obtener_primera_ficha(matriz, lista_adyacencia):
                 print(nodo)
                 print(peso)
                 return nodo, peso
-        else:
-            continue
     # Si no se encontró ningún nodo con peso 1 o 2, devolver el primer nodo con su peso
     primer_nodo = list(lista_adyacencia.keys())[0]
     peso_primer_nodo = lista_adyacencia[primer_nodo][0][1]
@@ -130,3 +128,20 @@ def imprimir_lista_nodos(lista_nodo):
     for nodo in lista_nodo:
         print("Fila:", nodo[0] + 1, "Columna:", nodo[1] + 1)
 
+def leer_matriz_numerica(input_file):
+    try:
+        with open(input_file, 'r') as f:
+            matriz = []
+            for line in f:
+                if not line.strip():
+                    continue
+                fila = list(map(int, line.strip().split(',')))
+                matriz.append(fila)
+
+        return matriz
+    except FileNotFoundError:
+        print("El archivo especificado no existe.")
+        sys.exit(1)
+    except Exception as e:
+        print("Ocurrió un error:", e)
+        sys.exit(1)

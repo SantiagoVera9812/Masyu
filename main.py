@@ -2,6 +2,7 @@ import sys
 from leerYPresentarInformacion import utilidades
 from leerYPresentarInformacion import insercionUsuario
 from logicaMasyu import listaAdyecencia
+from logicaMasyu import verificarGanador
 
 funciones = {
    "insertar_elemento": insercionUsuario.insertar_elementos,
@@ -14,7 +15,9 @@ funciones = {
    "obtener_primera_ficha": utilidades.obtener_primera_ficha,
    "eliminar_nodo":utilidades.eliminar_nodo_y_vecinos_matriz,
    "ignorar_nodo":utilidades.agregar_a_nodos_por_ignorar,
-   "imprimir_lista_nodos":utilidades.imprimir_lista_nodos
+   "imprimir_lista_nodos":utilidades.imprimir_lista_nodos,
+   "leer_matriz_de_archivo":utilidades.leer_matriz_numerica,
+   "verificar_respuesta":verificarGanador.atravesar_matriz
 }
 
 if __name__ == "__main__":
@@ -54,6 +57,15 @@ if __name__ == "__main__":
 
             # Llamar a la función con los argumentos proporcionados
              utilidades.agregar_a_nodos_por_ignorar(filas=filas, columnas=columnas, matriz=matriz, lista_nodos=lista_nodos)
+
+            elif nombre_del_comando ==  "leer_matriz_de_archivo":
+               print("leyendo...")
+               if len(argumentos) != 1:  # Se esperan exactamente 2 argumentos: filas y columnas
+                print("Se esperan exactamente 1 argumento")
+                continue
+
+               inputMatriz = argumentos[0]
+               matriz = utilidades.leer_matriz_numerica(inputMatriz)
             else:
              if len(argumentos) > 0:
                 # Check if the number of arguments matches the function's expected number
@@ -73,7 +85,7 @@ if __name__ == "__main__":
              else:
                 # Call the function without arguments
                 try:
-                 funcion()
+                  funcion()
                 except:
                    #Una funcion que requiera la matriz
                    try:
