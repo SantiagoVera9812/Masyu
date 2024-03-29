@@ -56,7 +56,7 @@ def obtener_primera_ficha(matriz, lista_adyacencia):
     print("No se encontró ningún nodo con peso 1 o 2. Devolviendo el primer nodo:", primer_nodo, "con peso:", peso_primer_nodo)
     return primer_nodo, peso_primer_nodo
 
-def eliminar_nodo_y_vecinos(fila, columna, lista_adyacencia):
+def eliminar_nodo_y_vecinos(fila, columna, matriz, lista_adyacencia):
     fila = int(fila) - 1  # Convertir fila a entero
     columna = int(columna) - 1
     lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)

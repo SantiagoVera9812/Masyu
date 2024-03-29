@@ -66,7 +66,10 @@ if __name__ == "__main__":
                 except:
                    funcion(*argumentos,lista_adyacencia)
                 finally:
-                   funcion(*argumentos,matriz,lista_nodos)
+                   try:
+                    funcion(*argumentos,matriz,lista_nodos)
+                   except:
+                     funcion(*argumentos,matriz,lista_adyacencia)
              else:
                 # Call the function without arguments
                 try:
