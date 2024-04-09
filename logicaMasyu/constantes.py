@@ -17,9 +17,16 @@ class Direcciones:
     ARRIBA = 'arriba'
     ABAJO = 'abajo'
 
+"""
+left_dir = {8, 9, 6, 1, 2}  # Constantes.RIGHT_DOWN, Constantes.DOWN_LEFT, Constantes.AL_LADO
+right_dir = {7, 10, 5, 1, 2}  # Constantes.UP_RIGHT, Constantes.LEFT_UP, Constantes.AL_LADO
+up_dir = {9, 10, 6, 1, 2}  # Constantes.DOWN_LEFT, Constantes.LEFT_UP, Constantes.VERTICAL
+down_dir = {7, 8, 6, 1, 2}      
+piezas = {0,1,2}
+"""
 class DirSeleccion:
-    all_dir = {Constantes.NADA,   Constantes.UP_RIGHT, Constantes.RIGHT_DOWN, Constantes.DOWN_LEFT, Constantes.LEFT_UP, Constantes.AL_LADO, Constantes.VERTICAL}
-    left_dir = {Constantes.RIGHT_DOWN,Constantes.DOWN_LEFT,Constantes.AL_LADO,Constantes.BLANCO,Constantes.NEGRO}
+    all_dir = {Constantes.NO_VECINOS,Constantes.UP_RIGHT, Constantes.RIGHT_DOWN, Constantes.DOWN_LEFT, Constantes.LEFT_UP, Constantes.AL_LADO, Constantes.VERTICAL}
+    left_dir = {Constantes.RIGHT_DOWN,Constantes.DOWN_LEFT,Constantes.VERTICAL,Constantes.BLANCO,Constantes.NEGRO}
     right_dir = {Constantes.UP_RIGHT,Constantes.LEFT_UP,Constantes.AL_LADO,Constantes.BLANCO,Constantes.NEGRO}
     up_dir = {Constantes.DOWN_LEFT,Constantes.LEFT_UP,Constantes.VERTICAL,Constantes.BLANCO,Constantes.NEGRO}
     down_dir = {Constantes.UP_RIGHT,Constantes.RIGHT_DOWN,Constantes.VERTICAL,Constantes.BLANCO,Constantes.NEGRO}
