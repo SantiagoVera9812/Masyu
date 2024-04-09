@@ -1,5 +1,5 @@
 from logicaMasyu import constantes
-
+from collections import OrderedDict
 def matriz_a_lista_de_adyacencia(matriz):
     lista_adyacencia = {}
     filas = len(matriz)
@@ -41,6 +41,61 @@ def lista_de_adyacencia_a_matriz(lista_adyacencia,matriz_og):
             matriz[fila_vecino][columna_vecino] = valor
 
     return matriz
+
+
+def ubicacion_nodo(matriz, fila_central, columna_central):
+    if matriz[fila_central][columna_central] not in constantes.DirSeleccion.piezas:
+        num_filas = len(matriz)
+        num_columnas = len(matriz[0])
+
+        nodos = {
+            "Arriba": (fila_central - 1, columna_central),
+            "Abajo": (fila_central + 1, columna_central),
+            "Izquierda": (fila_central, columna_central - 1),
+            "Derecha": (fila_central, columna_central + 1)
+        }
+
+        vecinos = OrderedDict()  
+        vecinos_agregados = 0
+        for direccion, (fila, columna) in nodos.items():
+            if 0 <= fila < num_filas and 0 <= columna < num_columnas:
+                if direccion == "Arriba" and matriz[fila][columna] in constantes.DirSeleccion.down_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                    vecinos[direccion] = matriz[fila][columna]
+                    vecinos_agregados += 1
+                elif direccion == "Abajo" and matriz[fila][columna] in constantes.DirSeleccion.up_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                    vecinos[direccion] = matriz[fila][columna]
+                    vecinos_agregados += 1
+                elif direccion == "Izquierda" and matriz[fila][columna] in constantes.DirSeleccion.right_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                    vecinos[direccion] = matriz[fila][columna]
+                    vecinos_agregados += 1
+                elif direccion == "Derecha" and matriz[fila][columna] in constantes.DirSeleccion.left_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                    vecinos[direccion] = matriz[fila][columna]
+                    vecinos_agregados += 1
+    else:
+        return matriz[fila_central][columna_central]  
+    
+    
+        
+    matriz[fila][columna] = asignar_valor(vecinos)
+    return vecinos  
+
+def asignar_valor(vecinos):
+    if len(vecinos) == 1:
+        direction = next(iter(vecinos.keys()))
+        if direction in ["Arriba", "Abajo"]:
+            return 6
+        elif direction in ["Izquierda", "Derecha"]:
+            return 5
+    elif len(vecinos) == 2:
+        if "Arriba" in vecinos and "Derecha" in vecinos:
+            return 7
+        elif "Derecha" in vecinos and "Abajo" in vecinos:
+            return 8
+        elif "Abajo" in vecinos and "Izquierda" in vecinos:
+            return 9
+        elif "Izquierda" in vecinos and "Arriba" in vecinos:
+            return 10
+
 
 def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia, lista_nodo):
     tiene_vecino_vertical = False
@@ -102,7 +157,7 @@ def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia, lista_nodo):
      if not con_horizontal:
         matriz[fila][columna] = constantes.Constantes.VERTICAL
     
-    if (fila,columna) not in lista_nodo:
+    if (fila,columna) not in lista_nodo and matriz[fila][columna] == 4:
      print("ver en esquina")
      es_esquina(matriz,fila,columna,lista_adyacencia,lista_nodo)
 
@@ -120,21 +175,25 @@ def es_esquina(matriz, fila, columna, lista_adyacencia, lista_nodo):
         # Verificar los vecinos en el rango correcto
         if (fila - 1, columna) in lista_adyacencia and (fila - 1, columna) not in lista_nodo:
             print("ver en esquina 1")
+            matriz[fila][columna] = constantes.Constantes.UP_RIGHT
             contador_vertical += 1
-        if (fila + 1, columna) in lista_adyacencia and matriz[fila + 1][columna] in [3, 4, 5, 6] and (fila + 1, columna) not in lista_nodo:
+        if (fila + 1, columna) in lista_adyacencia and matriz[fila + 1][columna] in [3, 5, 6] and (fila + 1, columna) not in lista_nodo:
+            """"matriz[fila][columna] = constantes.Constantes.RIGHT_DOWN"""
             print("ver en esquina 2")
             contador_vertical += 1
-        if (fila, columna - 1) in lista_adyacencia and matriz[fila][columna - 1] in [3, 4, 5, 6]  and (fila, columna - 1) not in lista_nodo:
+        if (fila, columna - 1) in lista_adyacencia and matriz[fila][columna - 1] in [3, 5, 6]  and (fila, columna - 1) not in lista_nodo:
+            matriz[fila][columna] = constantes.Constantes.DOWN_LEFT
             print("ver en esquina 3")
             contador_horizontal += 1
-        if (fila, columna + 1) in lista_adyacencia and matriz[fila][columna + 1] in [3, 4, 5, 6] and (fila, columna + 1) not in lista_nodo:
+        if (fila, columna + 1) in lista_adyacencia and matriz[fila][columna + 1] in [3, 5, 6] and (fila, columna + 1) not in lista_nodo:
+            matriz[fila][columna] = constantes.Constantes.LEFT_UP
             print("ver en esquina 4") 
             contador_horizontal += 1
 
     # El nodo es una esquina si hay un vecino horizontal y un vecino vertical en el rango correcto
     if(contador_horizontal >= 1 and contador_vertical >= 1):
        print("el nodo es una esquina") 
-       matriz[fila][columna] = constantes.Constantes.ESQUINA
+       
 
 
 
@@ -146,7 +205,7 @@ def procesar_matriz(matriz,lista_nodo):
         for columna in range(len(matriz[0])):
             if matriz[fila][columna] not in [0, 1, 2] and matriz[fila][columna] not in lista_nodo:
             # Convierte la matriz en lista de adyacencia
-             asignar_valor_nodo(matriz, fila, columna, lista_adyacencia,lista_nodo)
+             ubicacion_nodo(matriz, fila, columna)
             
     
     

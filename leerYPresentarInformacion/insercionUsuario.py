@@ -2,6 +2,7 @@ from leerYPresentarInformacion import utilidades
 from logicaMasyu import listaAdyecencia
 from logicaMasyu.constantes import Constantes
 
+
 def insertar_elementos(fila, columna, matriz, lista_nodo):
     fila = int(fila) - 1  # Convertir fila a entero
     columna = int(columna) - 1
@@ -10,16 +11,17 @@ def insertar_elementos(fila, columna, matriz, lista_nodo):
             print("Ya se encuentra un elemento en esa posición")
         else:
             
-            matriz[fila][columna] = 7
+            matriz[fila][columna] = 11
             
             lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
             print("asignando valores")
             try:
-             listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia, lista_nodo)
+             """listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia, lista_nodo)"""
+             listaAdyecencia.ubicacion_nodo(matriz,fila,columna)
             except Exception as e:
              print("Error:", e)
             print("procesar matriz")
-            listaAdyecencia.procesar_matriz(matriz,lista_nodo)
+            #listaAdyecencia.procesar_matriz(matriz,lista_nodo)
             print("mostrar matriz")
             utilidades.mostrar_matriz_ascii(matriz)
     else:
@@ -30,16 +32,20 @@ def editar_elemento(fila,columna,nuevoValor,matriz,lista_nodo):
     ESQUINA = Constantes.ESQUINA
     AL_LADO = Constantes.AL_LADO
     VERTICAL = Constantes.VERTICAL
+    DOWN_LEFT = Constantes.DOWN_LEFT
+    RIGHT_DOWN = Constantes.RIGHT_DOWN
+    LEFT_UP = Constantes.LEFT_UP
+    UP_RIGHT = Constantes.UP_RIGHT
     fila = int(fila) - 1  # Convertir fila a entero
     columna = int(columna) - 1
     nuevoValor = int(nuevoValor)
     if 0 <= fila < len(matriz) and 0 <= columna < len(matriz):
         
-            if(matriz[fila][columna] not in [NO_VECINOS,ESQUINA,AL_LADO,VERTICAL]):
+            if(matriz[fila][columna] not in [NO_VECINOS,ESQUINA,AL_LADO,VERTICAL, DOWN_LEFT, LEFT_UP,RIGHT_DOWN,UP_RIGHT]):
               print("No existe un elemento en el lugar propuesto")
               print("Valor existente:", matriz[fila][columna])
             else:
-                if(nuevoValor not in [NO_VECINOS,ESQUINA,AL_LADO,VERTICAL]):
+                if(nuevoValor not in [NO_VECINOS,ESQUINA,AL_LADO,VERTICAL, DOWN_LEFT, LEFT_UP,RIGHT_DOWN,UP_RIGHT]):
                     print("Nuevo valor no valido")
                 else:
                     matriz[fila][columna] = nuevoValor

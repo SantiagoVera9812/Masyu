@@ -27,7 +27,20 @@ def leer_archivo(input_file):
 def mostrar_matriz_ascii(matriz):
     # Funciones lambda para definir la representación entendida por la linea de comando y el usuario de cada elemento
     #Un punto representara un lugar en donde el jugador no ha puesto nada, un 0 representara las blancas, y un negro representara las negras
-    get_ascii = lambda x: ' . ' if x == constantes.Constantes.NADA else (' O ' if x == constantes.Constantes.BLANCO else (' X ' if x == constantes.Constantes.NEGRO else (' - ' if x == constantes.Constantes.NO_VECINOS else (' / ' if x == constantes.Constantes.ESQUINA else ('---' if x == constantes.Constantes.AL_LADO else ' | ')))))
+    get_ascii = lambda x: (
+    ' . ' if x == constantes.Constantes.NADA else  # Valor 0: Punto (Vacío)
+    (' O ' if x == constantes.Constantes.BLANCO else  # Valor 1: Círculo blanco (Blanco)
+    (' X ' if x == constantes.Constantes.NEGRO else  # Valor 2: X (Negro)
+    (' - ' if x == constantes.Constantes.NO_VECINOS else  # Valor 3: Guión (Sin Vecinos)
+    (' / ' if x == constantes.Constantes.ESQUINA else  # Valor 4: Diagonal (/) (Esquina)
+    ('---' if x == constantes.Constantes.AL_LADO else  # Valor 5: Tres guiones (---) (Al lado)
+    (' / ' if x == constantes.Constantes.UP_RIGHT else  # Valor 7: Diagonal (/) (UP_RIGHT)
+    (' \\ ' if x == constantes.Constantes.RIGHT_DOWN else  # Valor 8: Diagonal invertida (\) (RIGHT_DOWN)
+    (' / ' if x == constantes.Constantes.DOWN_LEFT else  # Valor 9: Diagonal (/) (DOWN_LEFT)
+    (' \\ ' if x == constantes.Constantes.LEFT_UP else  # Valor 10: Diagonal invertida (\) (LEFT_UP)
+    ' | '))))))))))  # Valor predeterminado: Barra vertical (|)
+
+
 
 
     for fila in matriz:
