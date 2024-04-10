@@ -81,37 +81,6 @@ def ubicacion_nodo(matriz, fila_central, columna_central, left_dir, right_dir, u
     
     return vecinos
 
-def imprimir_vecinosII(matriz, fila_central, columna_central, left_dir, right_dir, up_dir, down_dir):
-    num_filas = len(matriz)
-    num_columnas = len(matriz[0])
-    
-    nodos = {
-        "Arriba": (fila_central - 1, columna_central),
-        "Abajo": (fila_central + 1, columna_central),
-        "Izquierda": (fila_central, columna_central - 1),
-        "Derecha": (fila_central, columna_central + 1)
-    }
-    
-    vecinos = OrderedDict()  
-    vecinos_agregados = 0
-    for direccion, (fila, columna) in nodos.items():
-        if 0 <= fila < num_filas and 0 <= columna < num_columnas:
-            if matriz[fila][columna] is not None and (direccion == "Arriba" and matriz[fila][columna] not in piezas and matriz[fila][columna] in down_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2):
-                vecinos[direccion] = (fila, columna)
-                vecinos_agregados += 1
-            elif matriz[fila][columna] is not None and (direccion == "Abajo" and matriz[fila][columna] not in piezas and matriz[fila][columna] in up_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2):
-                vecinos[direccion] = (fila, columna)
-                vecinos_agregados += 1
-            elif matriz[fila][columna] is not None and (direccion == "Izquierda" and matriz[fila][columna] not in piezas and matriz[fila][columna] in right_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2):
-                vecinos[direccion] = (fila, columna)
-                vecinos_agregados += 1
-            elif matriz[fila][columna] is not None and (direccion == "Derecha" and matriz[fila][columna] not in piezas and matriz[fila][columna] in left_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2):
-                vecinos[direccion] = (fila, columna)
-                vecinos_agregados += 1
-    
-    return vecinos
- 
-
 def imprimir_vecinos(matriz, fila_central, columna_central, left_dir, right_dir, up_dir, down_dir):
     num_filas = len(matriz)
     num_columnas = len(matriz[0])
