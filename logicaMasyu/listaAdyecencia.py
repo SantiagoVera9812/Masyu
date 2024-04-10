@@ -132,7 +132,7 @@ def asignar_valor(vecinos):
             return 10
     return None 
 
-def insertarNumero11(fila, columna, matriz):
+def insertarNumero11(fila, columna,matriz):
 
     fila = int(fila)   # Convertir fila a entero
     columna = int(columna) 
