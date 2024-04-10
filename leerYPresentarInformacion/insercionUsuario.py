@@ -6,7 +6,7 @@ from logicaMasyu.constantes import Constantes
 def insertar_elementos(fila, columna, matriz):
     fila = int(fila) - 1  # Convertir fila a entero
     columna = int(columna) - 1
-    if 0 <= fila < len(matriz) and 0 <= columna < len(matriz):
+    if 0 <= fila < len(matriz) and 0 <= columna < len(matriz[fila]):
         if matriz[fila][columna] != 0:
             print("Ya se encuentra un elemento en esa posición")
         else:

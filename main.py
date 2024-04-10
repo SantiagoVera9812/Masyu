@@ -2,8 +2,7 @@ import sys
 from leerYPresentarInformacion import utilidades
 from leerYPresentarInformacion import insercionUsuario
 from logicaMasyu import listaAdyecencia
-from logicaMasyu import verificarGanador
-
+from logicaMasyu import checkWin
 funciones = {
    "insertar_elemento": insercionUsuario.insertar_elementos,
    "salir":insercionUsuario.salir,
@@ -17,7 +16,7 @@ funciones = {
    "ignorar_nodo":utilidades.agregar_a_nodos_por_ignorar,
    "imprimir_lista_nodos":utilidades.imprimir_lista_nodos,
    "leer_matriz_de_archivo":utilidades.leer_matriz_numerica,
-   "verificar_respuesta":verificarGanador.atravesar_matriz
+   "verificar_respuesta":checkWin.verificarRespuesta
 }
 
 if __name__ == "__main__":
