@@ -1,5 +1,14 @@
 from logicaMasyu import constantes
 from collections import OrderedDict
+
+
+
+left_dir = {8, 9, 5, 1, 2}  # Constantes.RIGHT_DOWN, Constantes.DOWN_LEFT, Constantes.AL_LADO
+right_dir = {7, 10, 5, 1, 2}  # Constantes.UP_RIGHT, Constantes.LEFT_UP, Constantes.AL_LADO
+up_dir = {9, 10, 6, 1, 2}  # Constantes.DOWN_LEFT, Constantes.LEFT_UP, Constantes.VERTICAL
+down_dir = {7, 8, 6, 1, 2}
+piezas = {0,1,2}
+
 def matriz_a_lista_de_adyacencia(matriz):
     lista_adyacencia = {}
     filas = len(matriz)
@@ -42,51 +51,77 @@ def lista_de_adyacencia_a_matriz(lista_adyacencia,matriz_og):
 
     return matriz
 
-
-def ubicacion_nodo(matriz, fila_central, columna_central):
-    if matriz[fila_central][columna_central] not in constantes.DirSeleccion.piezas:
-        num_filas = len(matriz)
-        num_columnas = len(matriz[0])
-
-        nodos = {
-            "Arriba": (fila_central - 1, columna_central),
-            "Abajo": (fila_central + 1, columna_central),
-            "Izquierda": (fila_central, columna_central - 1),
-            "Derecha": (fila_central, columna_central + 1)
-        }
-
-        vecinos = OrderedDict()  
-        vecinos_agregados = 0
-        for direccion, (fila, columna) in nodos.items():
-            if 0 <= fila < num_filas and 0 <= columna < num_columnas:
-                if direccion == "Arriba" and matriz[fila][columna] in constantes.DirSeleccion.down_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
-                    vecinos[direccion] = matriz[fila][columna]
-                    vecinos_agregados += 1
-                elif direccion == "Abajo" and matriz[fila][columna] in constantes.DirSeleccion.up_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
-                    vecinos[direccion] = matriz[fila][columna]
-                    vecinos_agregados += 1
-                elif direccion == "Izquierda" and matriz[fila][columna] in constantes.DirSeleccion.right_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
-                    vecinos[direccion] = matriz[fila][columna]
-                    vecinos_agregados += 1
-                elif direccion == "Derecha" and matriz[fila][columna] in constantes.DirSeleccion.left_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
-                    vecinos[direccion] = matriz[fila][columna]
-                    vecinos_agregados += 1
-    else:
-        return matriz[fila_central][columna_central]  
+def ubicacion_nodo(matriz, fila_central, columna_central, left_dir, right_dir, up_dir, down_dir):
+    num_filas = len(matriz)
+    num_columnas = len(matriz[0])
     
+    nodos = {
+        "Arriba": (fila_central - 1, columna_central),
+        "Abajo": (fila_central + 1, columna_central),
+        "Izquierda": (fila_central, columna_central - 1),
+        "Derecha": (fila_central, columna_central + 1)
+    }
     
-        
-    matriz[fila][columna] = asignar_valor(vecinos)
-    return vecinos  
+    vecinos = OrderedDict()  
+    vecinos_agregados = 0
+    for direccion, (fila, columna) in nodos.items():
+        if 0 <= fila < num_filas and 0 <= columna < num_columnas:
+            if direccion == "Arriba" and matriz[fila][columna] in down_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                vecinos[direccion] = matriz[fila][columna]
+                vecinos_agregados += 1
+            elif direccion == "Abajo" and matriz[fila][columna] in up_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                vecinos[direccion] = matriz[fila][columna]
+                vecinos_agregados += 1
+            elif direccion == "Izquierda" and matriz[fila][columna] in right_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                vecinos[direccion] = matriz[fila][columna]
+                vecinos_agregados += 1
+            elif direccion == "Derecha" and matriz[fila][columna] in left_dir or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                vecinos[direccion] = matriz[fila][columna]
+                vecinos_agregados += 1
+    
+    return vecinos
 
+def imprimir_vecinos(matriz, fila_central, columna_central, left_dir, right_dir, up_dir, down_dir):
+    num_filas = len(matriz)
+    num_columnas = len(matriz[0])
+    
+    nodos = {
+        "Arriba": (fila_central - 1, columna_central),
+        "Abajo": (fila_central + 1, columna_central),
+        "Izquierda": (fila_central, columna_central - 1),
+        "Derecha": (fila_central, columna_central + 1)
+    }
+    
+    vecinos = OrderedDict()  
+    vecinos_agregados = 0
+    for direccion, (fila, columna) in nodos.items():
+        if 0 <= fila < num_filas and 0 <= columna < num_columnas:
+            if direccion == "Arriba" and matriz[fila][columna] not in piezas or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                vecinos[direccion] = (fila, columna)
+                vecinos_agregados += 1
+            elif direccion == "Abajo" and matriz[fila][columna] not in piezas or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                vecinos[direccion] = (fila, columna)
+                vecinos_agregados += 1
+            elif direccion == "Izquierda" and matriz[fila][columna] not in piezas or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                vecinos[direccion] = (fila, columna)
+                vecinos_agregados += 1
+            elif direccion == "Derecha" and matriz[fila][columna] not in piezas or matriz[fila][columna] > 10 and vecinos_agregados < 2:
+                vecinos[direccion] = (fila, columna)
+                vecinos_agregados += 1
+    
+    return vecinos
+ 
 def asignar_valor(vecinos):
     if len(vecinos) == 1:
-        direction = next(iter(vecinos.keys()))
-        if direction in ["Arriba", "Abajo"]:
+        if "Arriba" in vecinos or "Abajo" in vecinos:
             return 6
-        elif direction in ["Izquierda", "Derecha"]:
+        elif "Izquierda" in vecinos or "Derecha" in vecinos:
             return 5
     elif len(vecinos) == 2:
+        if "Arriba" in vecinos and "Abajo" in vecinos:
+            return 6
+        if "Izquierda" in vecinos and "Derecha" in vecinos:
+            return 5
         if "Arriba" in vecinos and "Derecha" in vecinos:
             return 7
         elif "Derecha" in vecinos and "Abajo" in vecinos:
@@ -95,8 +130,36 @@ def asignar_valor(vecinos):
             return 9
         elif "Izquierda" in vecinos and "Arriba" in vecinos:
             return 10
+    return None 
 
+def insertarNumero11(fila, columna, matriz):
 
+    fila = int(fila)   # Convertir fila a entero
+    columna = int(columna) 
+    matriz[fila][columna] = 11
+    
+    posiciones_vecinos = imprimir_vecinos(matriz,fila,columna,left_dir,right_dir,up_dir,down_dir)
+    print("Nodos vecinos:")
+    for direccion, (fila_vecino,columna_vecino) in posiciones_vecinos.items():
+     print(matriz[fila_vecino][columna_vecino])
+    print("Filas y columnas de vecinos:")
+    for direccion, (fila_vecino, columna_vecino) in posiciones_vecinos.items():
+        print(matriz[fila_vecino][columna_vecino])
+        print(direccion, ":", "Fila:", fila_vecino, "Columna:", columna_vecino)
+        if matriz[fila_vecino][columna_vecino]:
+         vecinos_del_vecinos = ubicacion_nodo(matriz,fila_vecino,columna_vecino,left_dir,right_dir,up_dir,down_dir)
+         valor = asignar_valor(vecinos_del_vecinos)
+         matriz[fila_vecino][columna_vecino] = valor
+         print("por ubicacion_nodo del vecino:")
+         print(valor)
+
+    nuevos_vecinos = ubicacion_nodo(matriz,fila,columna,left_dir,right_dir,up_dir,down_dir)
+    valor = asignar_valor(nuevos_vecinos)
+    matriz[fila][columna] = valor
+    print("por ubicacion_nodo directo:")
+    print(valor)
+
+"""
 def asignar_valor_nodo(matriz, fila, columna, lista_adyacencia, lista_nodo):
     tiene_vecino_vertical = False
     tiene_vecino_horizontal = False
@@ -178,7 +241,7 @@ def es_esquina(matriz, fila, columna, lista_adyacencia, lista_nodo):
             matriz[fila][columna] = constantes.Constantes.UP_RIGHT
             contador_vertical += 1
         if (fila + 1, columna) in lista_adyacencia and matriz[fila + 1][columna] in [3, 5, 6] and (fila + 1, columna) not in lista_nodo:
-            """"matriz[fila][columna] = constantes.Constantes.RIGHT_DOWN"""
+            matriz[fila][columna] = constantes.Constantes.RIGHT_DOWN
             print("ver en esquina 2")
             contador_vertical += 1
         if (fila, columna - 1) in lista_adyacencia and matriz[fila][columna - 1] in [3, 5, 6]  and (fila, columna - 1) not in lista_nodo:
@@ -206,6 +269,6 @@ def procesar_matriz(matriz,lista_nodo):
             if matriz[fila][columna] not in [0, 1, 2] and matriz[fila][columna] not in lista_nodo:
             # Convierte la matriz en lista de adyacencia
              ubicacion_nodo(matriz, fila, columna)
-            
+ """           
     
     

@@ -74,8 +74,11 @@ if __name__ == "__main__":
                     continue  # Continue with the next iteration of the loop
                 # Call the function with arguments
                 try: 
+                   print("llego")
                    funcion(*argumentos,matriz)
-                except:
+               
+                except Exception as e:
+                   print("An error occurred:", e)
                    funcion(*argumentos,lista_adyacencia)
                 finally:
                    try:
@@ -99,6 +102,7 @@ if __name__ == "__main__":
                 finally:
                    #El caso especial para salir
                    ejecutar_bucle = funcion(ejecutar_bucle)
+      
       else:
             print("Nombre del comando no reconocido", nombre_del_comando)
      except TypeError:

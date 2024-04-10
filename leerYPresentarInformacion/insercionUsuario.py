@@ -3,7 +3,7 @@ from logicaMasyu import listaAdyecencia
 from logicaMasyu.constantes import Constantes
 
 
-def insertar_elementos(fila, columna, matriz, lista_nodo):
+def insertar_elementos(fila, columna, matriz):
     fila = int(fila) - 1  # Convertir fila a entero
     columna = int(columna) - 1
     if 0 <= fila < len(matriz) and 0 <= columna < len(matriz):
@@ -11,17 +11,13 @@ def insertar_elementos(fila, columna, matriz, lista_nodo):
             print("Ya se encuentra un elemento en esa posición")
         else:
             
-            matriz[fila][columna] = 11
-            
-            lista_adyacencia = listaAdyecencia.matriz_a_lista_de_adyacencia(matriz)
             print("asignando valores")
             try:
-             """listaAdyecencia.asignar_valor_nodo(matriz, fila, columna, lista_adyacencia, lista_nodo)"""
-             listaAdyecencia.ubicacion_nodo(matriz,fila,columna)
+             
+             listaAdyecencia.insertarNumero11(fila,columna,matriz)
             except Exception as e:
              print("Error:", e)
-            print("procesar matriz")
-            #listaAdyecencia.procesar_matriz(matriz,lista_nodo)
+            
             print("mostrar matriz")
             utilidades.mostrar_matriz_ascii(matriz)
     else:
