@@ -33,6 +33,7 @@ class DirSeleccion:
     straight_dir = {Constantes.AL_LADO, Constantes.VERTICAL }
     bend_dir = {Constantes.UP_RIGHT,Constantes.RIGHT_DOWN,Constantes.DOWN_LEFT,Constantes.LEFT_UP}
     horizontal_dir = {Constantes.AL_LADO}
+    vertical_dir = {Constantes.VERTICAL}
     piezas = {Constantes.BLANCO,Constantes.NEGRO}
 
 """

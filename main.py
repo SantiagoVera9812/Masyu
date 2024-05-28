@@ -3,12 +3,13 @@ from leerYPresentarInformacion import utilidades
 from leerYPresentarInformacion import insercionUsuario
 from logicaMasyu import listaAdyecencia
 from logicaMasyu import checkWin
+from logicaMasyu import jugadorAutomatico
 funciones = {
    "insertar_elemento": insercionUsuario.insertar_elementos,
    "salir":insercionUsuario.salir,
    "mostrar_matriz":utilidades.mostrar_matriz_ascii,
    "reiniciar":insercionUsuario.reiniciar,
-   "jugador_automatico":insercionUsuario.reiniciar,
+   "jugador_automatico":jugadorAutomatico.jugadorAutomatico,
    "mostrar_matriz_numerica":utilidades.mostrar_matriz,
    "editar_elemento":insercionUsuario.editar_elemento,
    "obtener_primera_ficha": utilidades.obtener_primera_ficha,
