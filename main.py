@@ -17,7 +17,8 @@ funciones = {
    "ignorar_nodo":utilidades.agregar_a_nodos_por_ignorar,
    "imprimir_lista_nodos":utilidades.imprimir_lista_nodos,
    "leer_matriz_de_archivo":utilidades.leer_matriz_numerica,
-   "verificar_respuesta":checkWin.verificarRespuesta
+   "verificar_respuesta":checkWin.verificarRespuesta,
+   "contar_casillas": checkWin.contar_casillas_1_2
 }
 
 if __name__ == "__main__":

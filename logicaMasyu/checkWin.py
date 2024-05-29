@@ -5,6 +5,8 @@ def contar_casillas_1_2(matriz):
         for elemento in fila:
             if elemento == 1 or elemento == 2:
                 total_casillas_1_2 += 1
+
+    print(total_casillas_1_2)
     return total_casillas_1_2
 
 def encontrar_primer_valor_no_comun(matriz):

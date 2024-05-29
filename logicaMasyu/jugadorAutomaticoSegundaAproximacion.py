@@ -1,6 +1,102 @@
 from logicaMasyu.constantes import DirSeleccion
 from logicaMasyu.constantes import Constantes
 
+def get_ascii(x):
+    if x == Constantes.NADA:
+        return ' . '  # Valor 0: Punto (Vacío)
+    elif x == Constantes.BLANCO:
+        return ' O '  # Valor 1: Círculo blanco (Blanco)
+    elif x == Constantes.NEGRO:
+        return ' X '  # Valor 2: X (Negro)
+    elif x == Constantes.NO_VECINOS:
+        return ' - '  # Valor 3: Guión (Sin Vecinos)
+    elif x == Constantes.ESQUINA:
+        return ' / '  # Valor 4: Diagonal (/) (Esquina)
+    elif x == Constantes.AL_LADO:
+        return '---'  # Valor 5: Tres guiones (---) (Al lado)
+    elif x == Constantes.UP_RIGHT:
+        return ' / '  # Valor 7: Diagonal (/) (UP_RIGHT)
+    elif x == Constantes.RIGHT_DOWN:
+        return ' \\ '  # Valor 8: Diagonal invertida (\) (RIGHT_DOWN)
+    elif x == Constantes.DOWN_LEFT:
+        return ' / '  # Valor 9: Diagonal (/) (DOWN_LEFT)
+    elif x == Constantes.LEFT_UP:
+        return ' \\ '  # Valor 10: Diagonal invertida (\) (LEFT_UP)
+    else:
+        return ' | '  # Valor predeterminado: Barra vertical (|)
+
+
+#Agregar un array para cada posible seleccion de direcciones
+def create_solution_array(rows, cols):
+    all_dir = {Constantes.NO_VECINOS, Constantes.UP_RIGHT, Constantes.RIGHT_DOWN, Constantes.DOWN_LEFT, Constantes.LEFT_UP, Constantes.AL_LADO, Constantes.VERTICAL}
+    solution = [[all_dir.copy() for _ in range(cols)] for _ in range(rows)]
+    return solution
+
+#Eliminar soluciones invalidas a lo mas alto, lo mas bajo la parte a la derecha y la parte a la izquierda del problema
+def remove_invalid_edge_shapes(solution):
+    rows = len(solution)
+    cols = len(solution[0])
+
+    for c in range(cols):
+        solution[0][c] -= DirSeleccion.up_dir     # top row
+        solution[rows - 1][c] -= DirSeleccion.down_dir   # bottom row
+
+    for r in range(rows):
+        solution[r][0] -= DirSeleccion.left_dir   # leftmost column
+        solution[r][cols - 1] -= DirSeleccion.right_dir  # rightmost column
+
+    return solution
+
+
+def apply_pearl_constraints(matrix, solution):
+    rows = len(matrix)
+    cols = len(matrix[0])
+
+    for r in range(rows):
+        for c in range(cols):
+            if matrix[r][c] == 1:  # Black pearl
+                solution[r][c] &= DirSeleccion.bend_dir
+                # Remove black near edge
+                if r + 2 > rows - 1:
+                    solution[r][c] &= DirSeleccion.up_dir
+                if r - 2 < 0:
+                    solution[r][c] &= DirSeleccion.down_dir
+                if c + 2 > cols - 1:
+                    solution[r][c] &= DirSeleccion.left_dir
+                if c - 2 < 0:
+                    solution[r][c] &= DirSeleccion.right_dir
+
+            elif matrix[r][c] == 2:  # White pearl
+                solution[r][c] &= DirSeleccion.straight_dir
+
+    return solution
+
+def print_solution(solution):
+    num_filas = len(solution)
+    num_columnas = len(solution[0]) if solution else 0
+
+    for r in range(num_filas):
+        for c in range(num_columnas):
+            # Convierte el conjunto a cadena y ajusta la longitud
+            
+            for item in solution[r][c]:
+                ascii_art = get_ascii(item)
+                print(ascii_art, end="")
+
+            print(" $ ", end="")
+        print()
+    print()
+
+  
+def todasLasPosiblesCombinaciones(matriz):
+    num_filas = len(matriz)
+    num_columnas = len(matriz[0]) if matriz else 0
+    solution = create_solution_array(num_filas, num_columnas)
+    solution = remove_invalid_edge_shapes(solution)
+    solution = apply_pearl_constraints(matriz, solution)   
+    
+    return solution
+
 def apply_white_rule(solution, r, c):
     
     #  es una perla blanca o aún no está restringida a una única dirección.
