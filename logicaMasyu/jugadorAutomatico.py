@@ -1,7 +1,8 @@
 from copy import deepcopy
 from logicaMasyu.constantes import DirSeleccion
-from logicaMasyu.constantes import Constantes 
-
+from logicaMasyu.constantes import Constantes
+from logicaMasyu.checkWin import contar_casillas_1_2
+import traceback
 
 def get_ascii(x):
     if x == Constantes.NADA:
@@ -100,6 +101,29 @@ def todasLasPosiblesCombinaciones(matriz):
     return solution
 
 def jugadorAutomatico(matriz):
+
+    numero_casillas = contar_casillas_1_2(matriz)
+    
+    try:  
+          try: 
+           startingPearl = find_starting_pearl(matriz)
+          except Exception as e:
+            print("An error occurred:", e)
+            print("Details:")
+            print(traceback.format_exc())
+
+          try: 
+           handle_starting_pearl(startingPearl, matriz, numero_casillas)
+          except Exception as e:
+            print("An error occurred:", e)
+            print("Details:")
+            print(traceback.format_exc())
+        
+    except SolutionFound as e:
+      print(f"Target found: {e}")
+        
+
+    """
     num_filas = len(matriz)
     num_columnas = len(matriz[0]) if matriz else 0
     solucion = todasLasPosiblesCombinaciones(matriz)
@@ -122,12 +146,12 @@ def jugadorAutomatico(matriz):
         for pearl in pearls:
             if pearl[0] == 0:
                 try:
-                 apply_black_rule(tmp, pearl[1], pearl[2])
+                 apply_black_rule(solucion, pearl[1], pearl[2])
                 except Exception as e:
                  print("An error occurred:", e)
             elif pearl[0] == 1:
                 try:
-                 apply_white_rule(tmp, pearl[1], pearl[2])
+                 apply_white_rule(solucion, pearl[1], pearl[2])
                 except Exception as e:
                  print("An error occurred:", e)
 
@@ -135,229 +159,266 @@ def jugadorAutomatico(matriz):
                 for c in range(num_columnas):
                     if len(solucion[r][c]) == 1:
                      try:
-                        filter_adj(tmp, r, c, num_filas, num_columnas)
+                        filter_adj(solucion, r, c, num_filas, num_columnas)
                      except Exception as e:
-                        print("An error occurred:", e)
-
+                          print("An error occurred:", e)
+                          print("Details:")
+                          print(f"r: {r}, c: {c}, num_filas: {num_filas}, num_columnas: {num_columnas}")
+                          print("solucion[r][c]:", solucion[r][c] if r < len(solucion) and c < len(solucion[0]) else "Out of bounds")
+                          print(traceback.format_exc()) */
+ 
     print_solution(solucion)
-
+  """
     
+#AUTOPLAYER
+def find_starting_pearl(matrix):
+    size = len(matrix)
 
+    # Check for a white pearl on the first/last row
+    for i in range(size):
+        if matrix[0][i] == 1:
+            return (0, i, 1)  # Type 1
+        if matrix[size-1][i] == 1:
+            return (size-1, i, 1)  # Type 1
 
+    # Check for a white pearl on the first/last column
+    for i in range(size):
+        if matrix[i][0] == 1:
+            return (i, 0, 2)  # Type 2
+        if matrix[i][size-1] == 1:
+            return (i, size-1, 2)  # Type 2
 
-def apply_white_rule(solution, r, c):
-    
-    # No bend on adjacent vertical, must be horizontal
-    if len(solution[r][c]) > 1:
-        adj_verts = set()
-        if r != 0:
-            adj_verts |= solution[r - 1][c]
-        if r != len(solution) - 1:
-            adj_verts |= solution[r + 1][c]
+    # Check for a black pearl in the corners
+    if matrix[0][0] == 2:
+        return (0, 0, 3)  # Type 3
+    if matrix[0][size-1] == 2:
+        return (0, size-1, 3)  # Type 3
+    if matrix[size-1][0] == 2:
+        return (size-1, 0, 3)  # Type 3
+    if matrix[size-1][size-1] == 2:
+        return (size-1, size-1, 3)  # Type 3
 
-        if not adj_verts & DirSeleccion.bend_dir:
-            solution[r][c] = DirSeleccion.horizontal_dir
+    # Check for any white pearl
+    for x in range(size):
+        for y in range(size):
+            if matrix[x][y] == 1:
+                return (x, y, 4)  # Type 4
 
-        # No bend on adjacent horizontal, must be vertical
-        adj_hors = set()
-        if c != 0:
-            adj_hors |= solution[r][c - 1]
-        if c != len(solution[0]) - 1:
-            adj_hors |= solution[r][c + 1]
+    # Check for any black pearl
+    for x in range(size):
+        for y in range(size):
+            if matrix[x][y] == 2:
+                return (x, y, 5)  # Type 5
 
-        if not adj_hors & DirSeleccion.bend_dir:
-            solution[r][c] = DirSeleccion.vertical_dir
+    return None
 
-    # Horizontal
-    if solution[r][c] == DirSeleccion.horizontal_dir:
-        solution[r][c - 1] &= DirSeleccion.right_dir
-        solution[r][c + 1] &= DirSeleccion.left_dir
-        if r != 0:
-            solution[r - 1][c] -= DirSeleccion.down_dir
-        if r != len(solution) - 1:
-            solution[r + 1][c] -= DirSeleccion.up_dir
+def handle_starting_pearl(start_pearl, matrix, total_pearls):
+    x, y, pearl_type = start_pearl
 
-        # No bend on left, right must bend
-        if not solution[r][c - 1] & DirSeleccion.bend_dir:
-            solution[r][c + 1] &= DirSeleccion.bend_dir
-        # No bend on right, left must bend
-        if not solution[r][c + 1] & DirSeleccion.bend_dir:
-            solution[r][c - 1] &= DirSeleccion.bend_dir
+    if pearl_type == 1:
+        # White pearl on the first row
+        if x == 0:
+            matrix[x][y + 1] = 8  # Assign UL to the cell on the right
+            buildRoad(x, y + 1, x, y + 1, x, y, matrix, total_pearls, 0)  # Call function on the right cell
+        # White pearl on the last row
+        elif x == len(matrix) - 1:
+            matrix[x][y + 1] = 10  # Assign DL to the cell on the right
+            buildRoad(x, y + 1, x, y + 1, x, y, matrix, total_pearls, 0)  # Call function on the right cell
+    # Handle other pearl types similarly
+    elif pearl_type == 2:
+        # White pearl on the first/last column
+        if y == 0:
+            matrix[x - 1][y] = 7  # Assign UR to the up cell
+            buildRoad(x - 1, y, x - 1, y, x, y, matrix, total_pearls, 0)  # Call function on the up cell
+        elif y == len(matrix) - 1:
+            matrix[x - 1][y] = 8  # Assign UL to the up cell
+            buildRoad(x - 1, y, x - 1, y, x, y, matrix, total_pearls, 0)  # Call function on the up cell
+    elif pearl_type == 3:
+        # Black pearl in a corner
+        if (x, y) == (0, 0):
+            matrix[x][y + 1] = 5  # H
+            buildRoad(x, y + 1, x, y + 1, x, y, matrix, total_pearls, 0)  # Call function on the right cell
+            matrix[x][y + 1] = 8  # Assign UL to the right cell
+            buildRoad(x, y + 1, x, y + 1, x, y, matrix, total_pearls, 0)  # Call function on the right cell with new UL value
+        elif (x, y) == (0, len(matrix) - 1):
+            matrix[x][y - 1] = 5  # H
+            buildRoad(x, y - 1, x, y - 1, x, y, matrix, total_pearls, 0)  # Call function on the left cell
+            matrix[x][y - 1] = 7  # Assign UR to the left cell
+            buildRoad(x, y - 1, x, y - 1, x, y, matrix, total_pearls, 0)  # Call function on the left cell with new UR value
+        elif (x, y) == (len(matrix) - 1, 0):
+            matrix[x][y + 1] = 5  # H
+            buildRoad(x, y + 1, x, y + 1, x, y, matrix, total_pearls, 0)  # Call function on the right cell
+            matrix[x][y + 1] = 10  # Assign DL to the right cell
+            buildRoad(x, y + 1, x, y + 1, x, y, matrix, total_pearls, 0)  # Call function on the right cell with new DL value
+        else:  # (x, y) == (len(matrix) - 1, len(matrix) - 1)
+            matrix[x][y - 1] = 5  # H
+            buildRoad(x, y - 1, x, y - 1, x, y, matrix, total_pearls, 0)  # Call function on the left cell
+            matrix[x][y - 1] = 9  # Assign DR to the left cell
+            buildRoad(x, y - 1, x, y - 1, x, y, matrix, total_pearls, 0)  # Call function on the left cell with new DR value
+    elif pearl_type == 4:
+        matrix[x - 1][y] = 7  # Assign UR to the up cell
+        buildRoad(x - 1, y, x - 1, y, x, y, matrix, total_pearls, 0)  # Call function on the up cell
+        matrix[x - 1][y] = 8  # Assign UL to the up cell
+        buildRoad(x - 1, y, x - 1, y, x, y, matrix, total_pearls, 0)  # Call function on the up cell with new UL value
 
-    # Vertical
-    if solution[r][c] == DirSeleccion.vertical_dir:
-        solution[r - 1][c] &= DirSeleccion.down_dir
-        solution[r + 1][c] &= DirSeleccion.up_dir
-        if c != 0:
-            solution[r][c - 1] -= DirSeleccion.right_dir
-        if c != len(solution[0]) - 1:
-            solution[r][c + 1] -= DirSeleccion.left_dir
+        matrix[x][y + 1] = 8  # Assign UL to the right cell
+        buildRoad(x, y + 1, x, y + 1, x, y, matrix, total_pearls, 0)  # Call function on the right cell with new UL value
 
-        # No bend on down, up must bend
-        if not solution[r - 1][c] & DirSeleccion.bend_dir:
-            solution[r + 1][c] &= DirSeleccion.bend_dir
-        # No bend on up, down must bend
-        if not solution[r + 1][c] & DirSeleccion.bend_dir:
-            solution[r - 1][c] &= DirSeleccion.bend_dir
-    
-    return solution
+        matrix[x][y + 1] = 10  # Assign DL to the right cell
+        buildRoad(x, y + 1, x, y + 1, x, y, matrix, total_pearls, 0)  # Call function on the right cell with new DL value
 
+    elif pearl_type == 5:
+        matrix[x - 1][y] = 6  # Assign V to the up cell
+        buildRoad(x - 1, y, x - 1, y, x, y, matrix, total_pearls, 0)  # Call function on the up cell
+        matrix[x - 1][y] = 7  # Assign UR to the up cell
+        buildRoad(x - 1, y, x - 1, y, x, y, matrix, total_pearls, 0)  # Call function on the up cell
+        matrix[x - 1][y] = 8  # Assign UL to the up cell
+        buildRoad(x - 1, y, x - 1, y, x, y, matrix, total_pearls, 0)  # Call function on the up cell with new UL value
 
+        matrix[x + 1][y] = 6  # Assign V to the down cell
+        buildRoad(x + 1, y, x + 1, y, x, y, matrix, total_pearls, 0)  # Call function on the down cell
+        matrix[x + 1][y] = 9  # Assign DR to the down cell
+        buildRoad(x + 1, y, x + 1, y, x, y, matrix, total_pearls, 0)  # Call function on the down cell
+        matrix[x + 1][y] = 10  # Assign DL to the down cell
+        buildRoad(x + 1, y, x + 1, y, x, y, matrix, total_pearls, 0)  # Call function on the down cell with new DL value
 
+class SolutionFound(Exception):
+    pass
 
-def apply_black_rule(solution, r, c):
-    # Ensure valid directions around a black pearl
-    if len(solution[r][c]) > 1:
-        # Check and update possible directions for the black pearl
-        if r > 0:
-            if not solution[r - 1][c] & DirSeleccion.vertical_dir:
-                solution[r][c] -= DirSeleccion.up_dir
-            elif r > 1 and not solution[r - 2][c] & DirSeleccion.down_dir:
-                solution[r][c] -= DirSeleccion.up_dir
+def buildRoad(x, y, initial_x, initial_y, last_x, last_y, matrix, total_pearls, pearls_visited, visited=None):
+    if visited is None:
+        visited = set()
+        visited.add((x, y))
 
-        if r < len(solution) - 1:
-            if not solution[r + 1][c] & DirSeleccion.vertical_dir:
-                solution[r][c] -= DirSeleccion.down_dir
-            elif r < len(solution) - 2 and not solution[r + 2][c] & DirSeleccion.up_dir:
-                solution[r][c] -= DirSeleccion.down_dir
+    connections = []
+    # Check the type of pearl in the cell
+    pearl_type = matrix[x][y]
+    if pearl_type in [1, 2]:
+        pearls_visited += 1
+    # Check up cell
+    if pearl_type in [1, 2, 6, 9, 10]:
+        #print('hereU: ' + str(matrix[x - 1][y]))
+        if x > 0 and (matrix[x - 1][y] in [1, 2, 6, 8, 7, 0]):
+            connections.append((x - 1, y))
 
-        if c > 0:
-            if not solution[r][c - 1] & DirSeleccion.horizontal_dir:
-                solution[r][c] -= DirSeleccion.left_dir
-            elif c > 1 and not solution[r][c - 2] & DirSeleccion.right_dir:
-                solution[r][c] -= DirSeleccion.left_dir
+    # Check down cell
+    if pearl_type in [1, 2, 6, 7, 8]:
+        #print('hereD: ' + str(matrix[x + 1][y]))
+        if x < len(matrix) - 1 and (matrix[x + 1][y] in [1, 2, 6, 10, 9, 0]):
+            connections.append((x + 1, y))
 
-        if c < len(solution[0]) - 1:
-            if not solution[r][c + 1] & DirSeleccion.horizontal_dir:
-                solution[r][c] -= DirSeleccion.right_dir
-            elif c < len(solution[0]) - 2 and not solution[r][c + 2] & DirSeleccion.left_dir:
-                solution[r][c] -= DirSeleccion.right_dir
+    # Check right cell
+    if pearl_type in [1, 2, 5, 7, 9]:
+        #print('hereR: ' + str(matrix[x][y + 1]))
+        if y < len(matrix[x]) - 1 and (matrix[x][y + 1] in [1, 2, 5, 8, 10, 0]):
+            connections.append((x, y + 1))
 
-    # Constrain must-go directions
-    if solution[r][c] == DirSeleccion.down_dir:
-        solution[r + 1][c] &= DirSeleccion.vertical_dir
-        solution[r + 2][c] &= DirSeleccion.up_dir
-        if r > 0:
-            solution[r - 1][c] -= DirSeleccion.down_dir
-        if {Constantes.UP_RIGHT}.issubset(solution[r][c]):
-            solution[r + 1][c + 1] -= DirSeleccion.left_dir
-        if {Constantes.RIGHT_DOWN}.issubset(solution[r][c]):
-            solution[r + 1][c - 1] -= DirSeleccion.right_dir
+    # Check left cell
+    if pearl_type in [1, 2, 5, 8, 10]:
+        #print('hereL: ' + str(matrix[x][y - 1]))
+        if y > 0 and (matrix[x][y - 1] in [1, 2, 5, 7, 9, 0]):
+            connections.append((x, y - 1))
 
-    if solution[r][c] == DirSeleccion.left_dir:
-        solution[r][c - 1] &= DirSeleccion.horizontal_dir
-        solution[r][c - 2] &= DirSeleccion.right_dir
-        if c < len(solution[0]) - 1:
-            solution[r][c + 1] -= DirSeleccion.left_dir
-        if {Constantes.RIGHT_DOWN}.issubset(solution[r][c]):
-            solution[r + 1][c - 1] -= DirSeleccion.up_dir
-        if {Constantes.DOWN_LEFT}.issubset(solution[r][c]):
-            solution[r - 1][c - 1] -= DirSeleccion.down_dir
+    # Remove (last_x, last_y) from connections if it exists
+    if (last_x, last_y) in connections:
+        connections.remove((last_x, last_y))
+    print(connections)
+    if len(connections) != 1 and last_x is not None:
+        return False
+    new_x, new_y = connections[0]
+    if (new_x, new_y) == (initial_x, initial_y):
+        if pearls_visited == total_pearls:
+          raise SolutionFound(matrix) # Closed loop detected
+        else:
+          return False
+    if (new_x, new_y) in visited:
+      return False
+    visited.add((new_x, new_y))
+   # Additional checks for the last_x, last_y cell
+    if last_x is not None:
+        if matrix[x][y] == 1:  # If current cell contains pearl 1
+            if last_x > x:  # Last move was down
+                for value in [6, 7, 8]:
+                    matrix[x - 1][y] = value
+                    if buildRoad(x - 1, y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[x - 1][y] = 0  # Reset the cell
 
-    if solution[r][c] == DirSeleccion.up_dir:
-        solution[r - 1][c] &= DirSeleccion.vertical_dir
-        solution[r - 2][c] &= DirSeleccion.down_dir
-        if r < len(solution) - 1:
-            solution[r + 1][c] -= DirSeleccion.up_dir
-        if {Constantes.DOWN_LEFT}.issubset(solution[r][c]):
-            solution[r - 1][c - 1] -= DirSeleccion.right_dir
-        if {Constantes.LEFT_UP}.issubset(solution[r][c]):
-            solution[r - 1][c + 1] -= DirSeleccion.left_dir
+            if last_x < x:  # Last move was up
+                for value in [6, 9, 10]:
+                    matrix[x + 1][y] = value
+                    if buildRoad(x + 1, y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[x + 1][y] = 0  # Reset the cell
 
-    if solution[r][c] == DirSeleccion.right_dir:
-        solution[r][c + 1] &= DirSeleccion.horizontal_dir
-        solution[r][c + 2] &= DirSeleccion.left_dir
-        if r > 0:
-            solution[r][c - 1] -= DirSeleccion.right_dir
-        if {Constantes.UP_RIGHT}.issubset(solution[r][c]):
-            solution[r + 1][c + 1] -= DirSeleccion.up_dir
-        if {Constantes.UP_RIGHT}.issubset(solution[r][c]):
-            solution[r - 1][c + 1] -= DirSeleccion.down_dir
-    
-    return solution
+            if last_y > y:  # Last move was right
+                for value in [5, 8, 10]:
+                    matrix[x][y + 1] = value
+                    if buildRoad(x, y + 1, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[x][y + 1] = 0  # Reset the cell
 
-def filter_adj(solution, r, c, num_filas, num_columnas):
-     # if current cell is empty
-    if solution == {0}:
-            # no adj cell go to current cell
-            if r != 0:
-                solution[r - 1][c] -= DirSeleccion.down_dir
-            if c != 0:
-                solution[r][c - 1] -= DirSeleccion.right_dir
-            if r != num_filas - 1:
-                solution[r + 1][c] -= DirSeleccion.up_dir
-            if c != num_columnas - 1:
-                solution[r][c + 1] -= DirSeleccion.left_dir
+            if last_y < y:  # Last move was left
+                for value in [5, 7, 9]:
+                    matrix[x][y - 1] = value
+                    if buildRoad(x, y - 1, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[x][y - 1] = 0  # Reset the cell
 
-        # if current cell is shape 1
-    elif solution[r][c] == {1}:
-            # restrict left and up
-            if r != 0:
-                solution[r - 1][c] -= DirSeleccion.down_dir
-            if c != 0:
-                solution[r][c - 1] -= DirSeleccion.right_dir
+        elif matrix[x][y] == 2:  # If current cell contains pearl 2
+            if last_x > x or last_x < x:  # Last move was down or Last move was up
+                for value in [5, 7, 9]:
+                    matrix[x][y - 1] = value
+                    if buildRoad(x, y - 1, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[x][y - 1] = 0  # Reset the cell
+                for value in [5, 8, 10]:
+                    matrix[x][y + 1] = value
+                    if buildRoad(x, y + 1, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[x][y - 1] = 0  # Reset the cell
 
-            # must go down and right
-            solution[r + 1][c] &= DirSeleccion.up_dir
-            solution[r][c + 1] &= DirSeleccion.left_dir
+            if last_y > y or last_y < y:  # Last move was right or Last move was left
+                for value in [6, 9, 10]:
+                     matrix[x + 1][y] = value
+                     if buildRoad(x + 1, y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                     matrix[x][y - 1] = 0  # Reset the cell
+                for value in [6, 7, 8]:
+                    matrix[x -1][y] = value
+                    if buildRoad(x - 1, y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[x][y - 1] = 0  # Reset the cell
 
-        # if current cell is shape 2
-    elif solution[r][c] == {2}:
-            # restrict right and up
-            if r != 0:
-                solution[r - 1][c] -= DirSeleccion.down_dir
-            if c != num_columnas - 1:
-                solution[r][c + 1] -= DirSeleccion.left_dir
+        else:
+            if matrix[new_x][new_y] in [1,2]:
+                if buildRoad(new_x, new_y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                      return True
+            if new_x > x:  # connection move is down
+                for value in [6, 9, 10]:
+                    matrix[new_x][new_y] = value
+                    if buildRoad(new_x, new_y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[new_x][new_y] = 0  # Reset the cell
 
-            # must go down and left
-            solution[r + 1][c] &= DirSeleccion.up_dir
-            solution[r][c - 1] &= DirSeleccion.right_dir
+            if new_x < x:  # connection move is up
+                for value in [6, 9, 8]:
+                    matrix[new_x][new_y] = value
+                    if buildRoad(new_x, new_y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[new_x][new_y] = 0  # Reset the cell
 
-        # if current cell is shape 3
-    elif solution[r][c] == {3}:
-            # restrict down and right
-            if r != num_filas - 1:
-                solution[r + 1][c] -= DirSeleccion.up_dir
-            if c != num_columnas - 1:
-                solution[r][c + 1] -= DirSeleccion.left_dir
+            if new_y > y:  # connection move is right
+                for value in [5, 8, 10]:
+                    matrix[new_x][new_y] = value
+                    if buildRoad(new_x, new_y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[new_x][new_y] = 0  # Reset the cell
 
-            # must go up and left
-            solution[r - 1][c] &= DirSeleccion.down_dir
-            solution[r][c - 1] &= DirSeleccion.right_dir
-
-        # if current cell is shape 4
-    elif solution[r][c] == {4}:
-            # restrict left and down
-            if r != num_filas - 1:
-                solution[r + 1][c] -= DirSeleccion.up_dir
-            if c != 0:
-                solution[r][c - 1] -= DirSeleccion.right_dir
-
-            # must go up and right
-            solution[r - 1][c] &= DirSeleccion.down_dir
-            solution[r][c + 1] &= DirSeleccion.left_dir
-
-        # if current cell is shape 5
-    elif solution[r][c] == {5}:
-            # restrict up and down
-            if r != 0:
-                solution[r - 1][c] -= DirSeleccion.down_dir
-            if r != num_filas - 1:
-                solution[r + 1][c] -= DirSeleccion.up_dir
-
-            # must go left and right
-            solution[r][c - 1] &= DirSeleccion.right_dir
-            solution[r][c + 1] &= DirSeleccion.left_dir
-
-        # if current cell is shape 6
-    elif solution[r][c] == {6}:
-            # restrict left and right
-            if c != 0:
-                solution[r][c - 1] -= DirSeleccion.right_dir
-            if c != num_columnas - 1:
-                solution[r][c + 1] -= DirSeleccion.left_dir
-
-            # must go up and down
-            solution[r - 1][c] &= DirSeleccion.down_dir
-            solution[r + 1][c] &= DirSeleccion.up_dir
-
+            if new_y < y:  # connection move is left
+                for value in [5, 7, 9]:
+                    matrix[new_x][new_y] = value
+                    if buildRoad(new_x, new_y, initial_x, initial_y, x, y, matrix, total_pearls, pearls_visited, visited):
+                        return True
+                    matrix[new_x][new_y] = 0  # Reset the cell
+    return False
